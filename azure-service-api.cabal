@@ -13,15 +13,20 @@ Description:         At the moment, this module only provides minimal
                      want to consult the Windows Azure Service Management REST
                      API Reference
                      (<http://msdn.microsoft.com/en-us/library/windowsazure/ee460799.aspx>). 
-Homepage:            github.com/haskell-distributed/azure-service-api
+Homepage:            http://haskell-distributed.github.com
 License:             BSD3
 License-File:        LICENSE
 Author:              Edsko de Vries
-Maintainer:          edsko@well-typed.com
+Maintainer:          edsko@well-typed.com, watson.timothy@gmail.com
+Bug-Reports:         https://cloud-haskell.atlassian.net/browse/APIAZURE
 Copyright:           Well-Typed LLP
 Category:            Network
 Build-Type:          Simple
 Cabal-Version:       >=1.8
+
+Source-Repository head
+  Type:     git
+  Location: https://github.com/haskell-distributed/azure-service-api
 
 Library
   Exposed-Modules:     Network.Azure.ServiceManagement 
