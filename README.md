@@ -1,4 +1,4 @@
-### azure-service-api [![travis](https://secure.travis-ci.org/cloud-haskell/azure-service-api.png)](http://travis-ci.org/cloud-haskell/azure-service-api)
+### azure-service-api [![travis](https://secure.travis-ci.org/haskell-distributed/azure-service-api.png)](http://travis-ci.org/haskell-distributed/azure-service-api)
 
 This repository is part of Cloud Haskell.
 
