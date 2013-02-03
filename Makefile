@@ -5,7 +5,7 @@ CABAL ?= $(shell which cabal)
 
 .PHONY: install
 install:
-	$(CABAL) install --with-ghc=$(GHC)
+	$(CABAL) install --with-ghc=$(GHC) --force-reinstalls
 
 .PHONY: ci
 ci: install
