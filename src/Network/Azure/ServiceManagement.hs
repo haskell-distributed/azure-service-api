@@ -25,18 +25,11 @@ import Prelude hiding (id, (.))
 import Control.Category (id, (.))
 import Control.Arrow (arr)
 import Control.Monad (forM)
-import Control.Applicative ((<$>), (<*>))
 import Data.Maybe (listToMaybe)
-import Data.ByteString.Lazy (ByteString)
 import Data.ByteString.Char8 as BSC (pack)
 import Data.ByteString.Lazy.Char8 as BSLC (unpack)
-import Data.Binary (Binary(get,put))
-import Data.Binary.Put (runPut)
-import Data.Binary.Get (Get, runGet)
-import Network.TLS (PrivateKey(PrivRSA))
+import Network (withSocketsDo)
 import Network.TLS.Extra (fileReadCertificate, fileReadPrivateKey)
-import Data.Certificate.X509 (X509, encodeCertificate, decodeCertificate)
-import qualified Crypto.Types.PubKey.RSA as RSA (PrivateKey(..))
 import Control.Monad.Trans.Resource (ResourceT)
 import Control.Monad.IO.Class (liftIO)
 import Control.Arrow.ArrowList (listA, arr2A)
@@ -54,9 +47,9 @@ import Network.HTTP.Conduit
   , clientCertificates
   , requestHeaders
   , withManager
-  , Response(Response)
   , httpLbs
   , Manager
+  , responseBody
   )
 import Data.CaseInsensitive as CI (mk)
 import Text.XML.HXT.Core
@@ -70,6 +63,13 @@ import Text.XML.HXT.Core
   , getText
   )
 import Text.XML.HXT.XPath (getXPathTrees)
+-- import Control.Applicative ((<$>), (<*>))
+-- import Data.ByteString.Lazy (ByteString)
+-- import Data.Binary.Put (runPut)
+-- import Data.Binary.Get (Get, runGet)
+-- import Data.Binary (Binary(get,put))
+import Network.TLS (PrivateKey)
+import Data.Certificate.X509 (X509)
 
 --------------------------------------------------------------------------------
 -- Data types                                                                 --
@@ -203,6 +203,7 @@ data AzureSetup = AzureSetup
 -- over a secure connection and it can be argued that it's safer than actually
 -- storing the private key on each remote server
 
+{-
 encodePrivateKey :: PrivateKey -> ByteString
 encodePrivateKey (PrivRSA pkey) = runPut $ do
   put (RSA.private_size pkey)
@@ -233,6 +234,7 @@ instance Binary AzureSetup where
     pkey <- decodePrivateKey <$> get
     url  <- get
     return $ AzureSetup sid cert pkey url
+-}
 
 -- | Initialize Azure
 azureSetup :: String        -- ^ Subscription ID
@@ -299,7 +301,7 @@ data AzureRequest c = AzureRequest {
   }
 
 azureExecute :: AzureSetup -> ((forall b. AzureRequest b -> ResourceT IO [b]) -> ResourceT IO a) -> IO a
-azureExecute setup f = withManager (\manager -> f (go manager))
+azureExecute setup f = withSocketsDo $ withManager (\manager -> f (go manager))
   where
     go :: Manager -> forall b. AzureRequest b -> ResourceT IO [b]
     go manager request = do
@@ -312,8 +314,8 @@ azureExecute setup f = withManager (\manager -> f (go manager))
                                , (CI.mk $ BSC.pack "content-type", BSC.pack "application/xml")
                                ]
         }
-      Response _ _ _ lbs <- httpLbs req' manager
+      rsp <- httpLbs req' manager
       liftIO . runX $ proc _ -> do
-        xml <- readString [withValidate no] (BSLC.unpack lbs) -< ()
+        xml <- readString [withValidate no] (BSLC.unpack $ responseBody rsp) -< ()
         -- arrIO putStrLn . writeDocumentToString [withIndent yes] -< xml
         parser request -< xml
