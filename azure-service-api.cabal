@@ -43,7 +43,7 @@ Library
                        crypto-pubkey-types >= 0.1 && < 0.2, 
                        binary >= 0.5 && < 0.8, 
                        resourcet >= 0.4 && < 0.5,
-                       transformers >= 0.3 && < 0.4
+                       transformers >= 0.3 && < 0.5
   HS-Source-Dirs:      src
   ghc-options:         -Wall
   Extensions:          RankNTypes
