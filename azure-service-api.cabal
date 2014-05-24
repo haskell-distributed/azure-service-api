@@ -41,7 +41,7 @@ Library
                        hxt-xpath >= 9.1 && < 9.2,
                        pretty >= 1.1 && < 1.2,
                        crypto-pubkey-types >= 0.1 && < 0.2, 
-                       binary >= 0.5 && < 0.7, 
+                       binary >= 0.5 && < 0.8, 
                        resourcet >= 0.4 && < 0.5,
                        transformers >= 0.3 && < 0.4
   HS-Source-Dirs:      src
