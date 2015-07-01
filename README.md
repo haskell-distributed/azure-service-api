@@ -1,9 +1,6 @@
 # azure-service-api
 [![travis](https://secure.travis-ci.org/haskell-distributed/azure-service-api.png)](http://travis-ci.org/haskell-distributed/azure-service-api)
-![Release](https://img.shields.io/hackage/v/azure-service-api.svg)
-
-azure-service-api is made available under a BSD-3 license.
-This repository is part of Cloud Haskell.
+[![Release](https://img.shields.io/hackage/v/azure-service-api.svg)](https://hackage.haskell.org/package/azure-service-api)
 
 See http://haskell-distributed.github.com for documentation, user guides,
 tutorials and assistance.
